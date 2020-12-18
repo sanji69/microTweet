@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}  {% for flashError in app.flashes('verify_email_error') %}
+    <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+{% endfor %}
+
+    <div>
+        <label>Username : </label>
+        {{ username }}
+    </div>
+    <div>
+        <label>Firstname : </label>
+        {{ firstname }}
+    </div>
+    <div>
+        <label>Name : </label>
+        {{ name }}
+    </div>
+    <div>
+        <label>Email : </label>
+        {{ email }}
+    </div>
+    <div>
+        <label>Birthdate : </label>
+        {{ birthdate|date("d/m/Y") }}
+    </div>
+
+{% endblock %}
