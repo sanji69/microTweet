@@ -9,21 +9,13 @@ use Doctrine\DBAL\Types\DateType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
 {
-//    /**
-//     * @Route("/user", name="user")
-//     */
-//    public function index(): Response
-//    {
-//        return $this->render('user/index.html.twig', [
-//            'controller_name' => 'UserController',
-//        ]);
-//    }
 
     /**
      * @Route ("/register", name="register")
@@ -127,7 +119,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route ("/delete", name="delete_user")
+     * @Route ("/{id}", name="delete_user", methods={"DELETE"})
      * @param Request $request
      * @param User $user
      * @return Response
@@ -135,14 +127,21 @@ class UserController extends AbstractController
     public function delete(Request $request, User $user): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+
+            $currentUserId = $this->getUser()->getId();
+            if ($currentUserId == $user->getId())
+            {
+                $session = $this->get('session');
+                $session = new Session();
+                $session->invalidate();
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($user);
             $entityManager->flush();
-
-            $this->addFlash('sup', 'Account deleted success');
         }
 
-        return $this->redirectToRoute('index');
+        return $this->redirectToRoute('login');
     }
 
     /**

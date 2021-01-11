@@ -29,6 +29,10 @@
 
     <button class="active" name="Edit" onclick="location.href='{{ path('edit_profile') }}'">Edit</button>
 
-    <button class="active" name="Edit" onclick="location.href='{{ path('edit_profile') }}'">Delete</button>
+    <form method="post" action="{{ path('delete_user', {'id': app.user.id }) }}" onsubmit="return confirm('Are you shure?')">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ app.user.id) }}">
+        <button class="btn btn-outline-danger mx-1">Delete</button>
+    </form>
 
 {% endblock %}
