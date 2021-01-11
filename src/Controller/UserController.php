@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\EditFormType;
 use App\Form\RegistrationFormType;
 use Doctrine\DBAL\Types\DateType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,15 +15,15 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/user", name="user")
-     */
-    public function index(): Response
-    {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
-    }
+//    /**
+//     * @Route("/user", name="user")
+//     */
+//    public function index(): Response
+//    {
+//        return $this->render('user/index.html.twig', [
+//            'controller_name' => 'UserController',
+//        ]);
+//    }
 
     /**
      * @Route ("/register", name="register")
@@ -39,7 +40,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
@@ -50,9 +50,8 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('index');
+            return $this->redirectToRoute('login');
         }
 
         return $this->render("user/register.html.twig", [
@@ -70,9 +69,7 @@ class UserController extends AbstractController
              return $this->redirectToRoute('index');
          }
 
-        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render("user/login.html.twig", [
@@ -97,6 +94,55 @@ class UserController extends AbstractController
             "birthdate" => $user->getBirthdate()
         ]);
 
+    }
+
+    /**
+     * @Route ("/edit", name="edit_profile")
+     * @param Request $request
+     * @return Response
+     */
+    public function edit(Request $request) :Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(EditFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('profile');
+        }
+
+        return $this->render("user/edit.html.twig", [
+            'editForm' => $form->createView(),
+            "username" => $user->getUsername(),
+            "firstname" => $user->getFirstname(),
+            "name" => $user->getName(),
+            "email" => $user->getEmail(),
+            "birthdate" => $user->getBirthdate()
+        ]);
+    }
+
+    /**
+     * @Route ("/delete", name="delete_user")
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     */
+    public function delete(Request $request, User $user): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            $this->addFlash('sup', 'Account deleted success');
+        }
+
+        return $this->redirectToRoute('index');
     }
 
     /**

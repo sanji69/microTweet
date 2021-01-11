@@ -27,4 +27,8 @@
         {{ birthdate|date("d/m/Y") }}
     </div>
 
+    <button class="active" name="Edit" onclick="location.href='{{ path('edit_profile') }}'">Edit</button>
+
+    <button class="active" name="Edit" onclick="location.href='{{ path('edit_profile') }}'">Delete</button>
+
 {% endblock %}

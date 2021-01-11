@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}  {% for flashError in app.flashes('verify_email_error') %}
+    <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+{% endfor %}
+
+    <h1>Edit</h1>
+
+    {{ form_start(editForm) }}
+    {{ form_row(editForm.username) }}
+    {{ form_row(editForm.firstname) }}
+    {{ form_row(editForm.name) }}
+    {{ form_row(editForm.email) }}
+    {{ form_row(editForm.birthdate) }}
+
+    <button type="submit" class="btn">Update</button>
+    {{ form_end(editForm) }}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+{% endblock %}
