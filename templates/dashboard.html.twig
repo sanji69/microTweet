@@ -1,0 +1,43 @@
+{% include 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('dashboard') }}
+{% endblock %}
+
+{% block body %}
+    {% block page_content %}
+        <div class="container">
+            <div class="card" style="margin-top: 60px">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-2">Toto</div>
+                        <div class="col-lg-10">
+                            <form action="{{ path('tweet_new') }}" method="post">
+                                <div class="row">
+                                    <div class="input-group">
+                                        <span class="input-group-text">Tweet</span>
+                                        <textarea class="form-control" name="tweet_body" aria-label="With textarea"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <small id="characterCounter">0/144</small>
+                                </div>
+                                <div class="row" id="displayImg"></div>
+                                <div class="row">
+                                    <input type="file" name="tweet_file" accept="*/*">
+                                    <button type="submit" class="btn btn-outline-success my-1 mx-2">
+                                        Publier
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_link_tags('dashboard') }}
+{% endblock %}
