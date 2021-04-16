@@ -1,40 +1,62 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('profile') }}
+	{{ encore_entry_link_tags('profile') }}
 {% endblock %}
 {% block page_content %}
-    <div class="container my-5 py-5">
-        <div class="row">
-            <div class="card ">
-                <div class="card-body">
-                    <p><strong>Pseudo:</strong> {{ user.username }}</p>
-                    <figure>
-                        <blockquote class="blockquote">
-                            <p>
-                                <strong>Prénom:</strong> {{ user.firstname }} <strong>Nom:</strong> {{ user.lastname }}
-                            </p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                            Date de naissance: {{ user.birthdate|date("m/d/Y") }}
-                        </figcaption>
-                    </figure>
-                    <p><strong>Email:</strong> {{ user.email }}</p>
-                    <div class="row justify-content-center">
-                    {% if is_granted('edit', user) %}
-                        <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-outline-success mx-1">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                    {% endif %}
-                    {% if is_granted('delete', user) %}
-                        {% include 'user/_delete_form.html.twig' %}
-                    {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  
+
+
+	<div class="container my-5 py-5">
+
+      <h1 style="text-aligne: center">Recherche un utilisateur</h1>
+      <div class="form-group">
+      <input class="form-control" type="text" id="search-user" placeholder="Recherche par nom"/>
+
+      </div>
+
+		<div class="row">
+			<div class="card ">
+				<div class="card-body">
+					<p>
+						<strong>Pseudo:</strong>
+						{{ user.username }}</p>
+					<figure>
+						<blockquote class="blockquote">
+							<p>
+								<strong>Prénom:</strong>
+								{{ user.firstname }}
+								<strong>Nom:</strong>
+								{{ user.lastname }}
+							</p>
+						</blockquote>
+						<figcaption class="blockquote-footer">
+							Date de naissance:
+							{{ user.birthdate|date("m/d/Y") }}
+						</figcaption>
+					</figure>
+					<p>
+						<strong>Email:</strong>
+						{{ user.email }}</p>
+					<div class="row justify-content-center">
+						{% if is_granted('edit', user) %}
+							<a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-outline-success mx-1">
+								<i class="bi bi-pencil-square"></i>
+							</a>
+						{% endif %}
+						{% if is_granted('delete', user) %}
+							{% include 'user/_delete_form.html.twig' %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
 {% endblock %}
 {% block javascripts %}
-    {{ encore_entry_link_tags('profile') }}
+	{{ encore_entry_script_tags('profile') }}
 {% endblock %}

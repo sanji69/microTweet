@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +17,22 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserController extends AbstractController
 {
+
+    /**
+     * @Route("/search/{recherche}", name="user_search", methods={"GET"})
+     
+     */
+    public function show(Request $request, $recherche) {
+        //$data="toto";
+        //dd($request->query->get('recherche'));
+        $lastname = $request->query->get('recherche');
+        $users = $this->getDoctrine()->getRepository(User::class)->findUserWithSearchQuery($lastname, 5);
+
+        return $this->json($users);
+
+    }
+
+
     /**
      * @Route("/", name="user_index", methods={"GET"})
      */
@@ -27,6 +42,8 @@ class UserController extends AbstractController
             'users' => $userRepository->findAll(),
         ]);
     }
+
+    
 
     /**
      * @Route("/new", name="user_new", methods={"GET","POST"})
@@ -117,4 +134,6 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('dashboard');
     }
+   
+    
 }

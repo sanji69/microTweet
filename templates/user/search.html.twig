@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue | Formation{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('catalogue') }}
+    {{ encore_entry_link_tags('pagination') }}
+{% endblock %}
+
+{% block body %}
+    <section class="conteneur">
+        <h2 class="title-section text-center">Catalogue des formations</h2>
+        <div class="shadow input-group">
+            <form method="get" class="form-custom" action="{{ path('search_formation') }}">
+                <input type="search" name="search" id="search" class="form-input-search form-control"
+                       placeholder="Recherche par nom, organisme, fonction, etc"
+                       aria-label="Rechercher une formation" value="{{ app.request.get('search', '') }}">
+                <div class="input-group-append">
+                    <button class="form-btn-search btn btn-secondary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% if formations is empty %}
+            <p>
+                Aucune formation ne semble correspondre à la recherche "{{ search_query }}".
+                <br>
+                Peux-être voudriez-vous faire une autre recherche, avec d'autres termes ?
+            </p>
+        {% endif %}
+
+        <div class="row">
+            {% for formation in formations  %}
+                <div class="col-md-4 mb-5">
+                    <h3 class="title-formation-catalogue">{{ formation.name }}</h3>
+                    <div>
+                        <a href="{{ path('formation_show', {'id': formation.id}) }}">
+                            <img class="d-block" src="{{ formation.image is null ? asset('media/exemple_formation.jpg')|imagine_filter('all_images') : asset('/media/uploads/images/formation/' ~ formation.image)|imagine_filter('all_images') }}"
+                                 alt="Image de la formation">
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {{ knp_pagination_render(formations) }}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
