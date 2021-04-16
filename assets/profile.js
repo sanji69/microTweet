@@ -10,8 +10,7 @@ function searchProfile(e) {
     response.json().then((data) => {
        data.forEach(function() {
        //
-       
-           
+       //$("<span></span>").insertAfter("p");
        p =+ `<div class="suggestion"></div>`
        });
             
